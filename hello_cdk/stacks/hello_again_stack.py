@@ -1,8 +1,9 @@
-import aws_cdk.aws_s3 as s3
+# import aws_cdk.aws_s3 as s3
+# from aws_cdk import CfnOutput, Duration, RemovalPolicy
 from aws_cdk import Stack  # Duration,; aws_sqs as sqs,
-from aws_cdk import CfnOutput, Duration, RemovalPolicy
 from aws_cdk import aws_lambda as _lambda
 from constructs import Construct
+
 from hello_cdk.constructs.sns_sqs import SnsSqsConstruct
 
 
@@ -16,7 +17,7 @@ class HelloAgainStack(Stack):
             id="SnsSqsPair",
         )
 
-        messenger_lambda = _lambda.Function(
+        _lambda.Function(
             scope=self,
             id="MessengerLambda",
             runtime=_lambda.Runtime.PYTHON_3_10,
@@ -36,7 +37,7 @@ class HelloAgainStack(Stack):
             },
         )
 
-        message_visualization_lambda = _lambda.Function(
+        _lambda.Function(
             scope=self,
             id="MessageVisualizationLambda",
             runtime=_lambda.Runtime.PYTHON_3_10,

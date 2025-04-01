@@ -1,9 +1,6 @@
-import aws_cdk.aws_s3 as s3
 from aws_cdk import Stack  # Duration,; aws_sqs as sqs,
-from aws_cdk import CfnOutput, Duration, RemovalPolicy
 from aws_cdk import aws_apigateway as api_gateway
 from aws_cdk import aws_lambda as _lambda
-from aws_cdk import aws_sqs as sqs
 from cdk_dynamo_table_view import TableViewer
 from constructs import Construct
 

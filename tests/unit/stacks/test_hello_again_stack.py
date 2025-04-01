@@ -1,6 +1,7 @@
+from aws_cdk import Stack, assertions
+
 from hello_cdk.stacks.hello_again_stack import HelloAgainStack
-from aws_cdk import assertions, Stack
-from aws_cdk import aws_lambda as _lambda
+
 
 class TestHelloAgainStack:
     def test_stack_creates_lambda(self) -> None:

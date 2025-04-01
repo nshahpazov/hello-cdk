@@ -1,8 +1,7 @@
-from hello_cdk.constructs.sns_sqs import SnsSqsConstruct
 from aws_cdk import Stack, assertions
-from aws_cdk import aws_lambda as _lambda
 
-from hello_cdk.constructs.hit_counter import HitCounter
+from hello_cdk.constructs.sns_sqs import SnsSqsConstruct
+
 
 class TestAnotherStack:
     def test_sns_sqs_construct_creates_resources_success(self):

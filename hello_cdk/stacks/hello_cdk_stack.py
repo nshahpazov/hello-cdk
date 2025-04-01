@@ -1,6 +1,6 @@
 import aws_cdk.aws_s3 as s3
 from aws_cdk import Stack  # Duration,; aws_sqs as sqs,
-from aws_cdk import CfnOutput, Duration, RemovalPolicy
+from aws_cdk import RemovalPolicy
 from aws_cdk import aws_lambda as _lambda
 from constructs import Construct
 
@@ -62,7 +62,7 @@ class HelloCdkStack(Stack):
         )
 
         # we add a function URL to the stack output
-        my_function_url = my_function.add_function_url(
+        my_function.add_function_url(
             auth_type=_lambda.FunctionUrlAuthType.AWS_IAM,
         )
 

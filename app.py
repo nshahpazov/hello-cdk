@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 import aws_cdk as cdk
 
-from hello_cdk.stacks.another_stack import AnotherStack
-from hello_cdk.stacks.hello_cdk_stack import HelloCdkStack
 from hello_cdk.stacks.hello_again_stack import HelloAgainStack
 
 
