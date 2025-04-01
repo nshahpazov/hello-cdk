@@ -1,0 +1,11 @@
+[project]
+name = "hello-cdk"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "aws-cdk-lib==2.185.0",
+    "cdk-dynamo-table-view==0.2.488",
+    "constructs>=10.0.0,<11.0.0",
+]
