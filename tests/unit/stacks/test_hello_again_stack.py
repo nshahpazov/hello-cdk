@@ -12,14 +12,14 @@ class TestHelloAgainStack:
         )
         template = assertions.Template.from_stack(stack)
 
-        envCapture = assertions.Capture()
+        env_capture = assertions.Capture()
 
         template.has_resource_properties("AWS::Lambda::Function", {
             "Handler": "messenger.handler",
-            "Environment": envCapture,
+            "Environment": env_capture,
         })
 
-        assert envCapture.as_object() == {
+        assert env_capture.as_object() == {
             "Variables": {
                 "TOPIC_NAME": {'Fn::GetAtt': ['SnsSqsPairHelloCdkTopic9AB7EAB1', 'TopicName']}
             },

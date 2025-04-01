@@ -6,7 +6,7 @@ from constructs import Construct
 class HitCounter(Construct):
 
     @property
-    def handler(self):
+    def handler(self) -> _lambda.IFunction | _lambda.Function:
         return self._handler
 
 
@@ -14,7 +14,7 @@ class HitCounter(Construct):
             self,
             scope: Construct,
             id: str,
-            downstream: _lambda.IFunction,
+            downstream: _lambda.IFunction | _lambda.Function,
             read_capacity: int = 5,
             **kwargs,
         ) -> None:

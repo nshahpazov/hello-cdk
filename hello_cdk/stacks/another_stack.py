@@ -24,7 +24,8 @@ class AnotherStack(Stack):
         # we create a construct which has
         # - a ddb table with hit counter
         # - a hit lambda function that counts the hits
-        # a downstream lambda function that is passed as a parameter. The hit lambda invokes the downstream lambda function
+        # a downstream lambda function that is passed as a parameter. The hit lambda invokes
+        # the downstream lambda function
         # and increments the hit count in the ddb table
         # we pass the downstream lambda function to the hit counter construct
         # using env vars, the hit lambda invokes the downstream lambda function
@@ -38,7 +39,7 @@ class AnotherStack(Stack):
         api_gateway.LambdaRestApi(
             scope=self,
             id="Endpoint",
-            handler=hello_with_counter.handler,
+            handler=hello_with_counter.handler, # type: ignore[union-attr]
         )
 
         # we use a 3rd party construct to create a table viewer by passed table name

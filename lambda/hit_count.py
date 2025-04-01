@@ -2,8 +2,10 @@ import json
 import os
 
 import boto3
+from mypy_boto3_dynamodb.service_resource import DynamoDBServiceResource
 
-ddb = boto3.resource('dynamodb')
+ddb: DynamoDBServiceResource = boto3.resource('dynamodb') # type: ignore
+
 table = ddb.Table(os.environ['HITS_TABLE_NAME'])
 aws_lambda = boto3.client('lambda')
 
