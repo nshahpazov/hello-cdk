@@ -6,11 +6,15 @@ env:
 jobs:
   Explore-Github-Actions:
     runs-on: ubuntu-latest
-    name: ${{ vars.INFORMATION.NAME }}
+    environment: ${{ vars.INFORMATION }}
     env:
         TOMORROW: Tuesday
     steps:
-      - run: echo "👋 Hello, $NAME"
+      - name: Say Hello
+        run: echo "👋 Hello, $NAME"
+        env:
+          NAME: ${{ vars.NAME }}
+      
       # - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
       # - run: echo "🤖 The job was triggered by the user ${{ github.actor }}."
       # - run: echo "📅 The job was triggered at ${{ github.event.head_commit.timestamp }}."
