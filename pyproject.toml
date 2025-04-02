@@ -30,12 +30,38 @@ lint = [
     "ruff>=0.9.2",
 ]
 
-# tool pyright
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.ruff]
+line-length = 88
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+
 [tool.pyright]
 include = [
     "hello_cdk",
     "tests",
 ]
+
+[tool.black]
+target-version = ["py311", "py312", "py313"]
+
+
+[tool.isort]
+atomic = true
+force_grid_wrap = 0
+include_trailing_comma = true
+lines_after_imports = 2
+lines_between_types = 1
+multi_line_output = 3
+use_parentheses = true
+
+line_length = 100
+
 exclude = [
     "**/__pycache__",
     "**/*.pyc",
