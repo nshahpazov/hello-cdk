@@ -6,7 +6,7 @@ env:
 jobs:
   Explore-Github-Actions:
     runs-on: ubuntu-latest
-    environment: ${{ vars.INFORMATION }}
+    name: ${{ vars.INFORMATION.NAME }}
     env:
         TOMORROW: Tuesday
     steps:
