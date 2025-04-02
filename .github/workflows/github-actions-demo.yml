@@ -11,8 +11,8 @@ jobs:
         TOMORROW: Tuesday
     steps:
       - name: Say Hello
-        run: echo "👋 Hello, ${{vars.NAME}}
-      
+        # you need to use ${{}} syntax to access the variables instead of $NAME
+        run: echo "👋 Hello, ${{vars.NAME}}"
       # - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
       # - run: echo "🤖 The job was triggered by the user ${{ github.actor }}."
       # - run: echo "📅 The job was triggered at ${{ github.event.head_commit.timestamp }}."
@@ -30,5 +30,5 @@ jobs:
       # - name: List files in the repository
       #   run: |
       #     ls ${{github.workspace}}
-      # - run: echo "🍏 This job's status is ${{ job.status }}."
+      - run: echo "🍏 This job's status is ${{ job.status }}."
 
