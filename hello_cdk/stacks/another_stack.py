@@ -18,7 +18,7 @@ class AnotherStack(Stack):
             id="HelloHandler",
             runtime=_lambda.Runtime.PYTHON_3_10,
             code=_lambda.Code.from_asset("lambda"),
-            handler='hello.handler',
+            handler="hello.handler",
         )
 
         # we create a construct which has
@@ -39,14 +39,14 @@ class AnotherStack(Stack):
         api_gateway.LambdaRestApi(
             scope=self,
             id="Endpoint",
-            handler=hello_with_counter.handler, # type: ignore[union-attr]
+            handler=hello_with_counter.handler,  # type: ignore[union-attr]
         )
 
         # we use a 3rd party construct to create a table viewer by passed table name
         TableViewer(
             parent=self,
-            id='ViewHitCounter',
-            title='Hello Hits',
+            id="ViewHitCounter",
+            title="Hello Hits",
             table=hello_with_counter.table,
-            sort_by='hits',
+            sort_by="hits",
         )

@@ -1,27 +1,83 @@
 #!/usr/bin/env python3
 import aws_cdk as cdk
 
-from hello_cdk.stacks.hello_again_stack import HelloAgainStack
+from workshops.operational_excellence.stacks.application_stack import ApplicationStack
+from workshops.operational_excellence.stacks.approval_gate_stack import (
+    ApprovalGateStack,
+)
+from workshops.operational_excellence.stacks.automation_role_stack import (
+    AutomationRoleStack,
+)
+
+# from hello_cdk.stacks.hello_again_stack import HelloAgainStack
+from workshops.operational_excellence.stacks.baseline_resources_stack import (
+    BaselineResourcesStack,
+)
+from workshops.operational_excellence.stacks.investigate_alarm_meta_stack import (
+    InvestigateAlarmMetaStack,
+)
+from workshops.operational_excellence.stacks.investigate_alarm_stack import (
+    InvestigateAlarmStack,
+)
+from workshops.operational_excellence.stacks.resources_gatherer_stack import (
+    ResourcesGathererStack,
+)
+from workshops.operational_excellence.stacks.scale_stack import ScaleStack
 
 
 app = cdk.App()
-HelloAgainStack(scope=app, construct_id="AnotherStack")
-# HelloCdkStack(app, "HelloCdkStack",
-    # If you don't specify 'env', this stack will be environment-agnostic.
-    # Account/Region-dependent features and context lookups will not work,
-    # but a single synthesized template can be deployed anywhere.
 
-    # Uncomment the next line to specialize this stack for the AWS Account
-    # and Region that are implied by the current CLI configuration.
+BaselineResourcesStack(
+    scope=app,
+    construct_id="BaselineResourcesStack",
+)
 
-    #env=cdk.Environment(account=os.getenv('CDK_DEFAULT_ACCOUNT'), region=os.getenv('CDK_DEFAULT_REGION')),
+application_stack = ApplicationStack(
+    scope=app,
+    construct_id="ApplicationStack",
+)
 
-    # Uncomment the next line if you know exactly what Account and Region you
-    # want to deploy the stack to. */
+automation_role_stack = AutomationRoleStack(
+    scope=app,
+    construct_id="AutomationRoleStack",
+)
 
-    #env=cdk.Environment(account='123456789012', region='us-east-1'),
+# add other stacks for the workshop
+resources_gatherer_stack = ResourcesGathererStack(
+    scope=app,
+    construct_id="ResourcesGathererStack",
+    assumed_role_arn=automation_role_stack.role.role_arn,
+    canary_duration_alarm_arn=application_stack.arns.canary_duration_alarm_arn,
+)
 
-    # For more information, see https://docs.aws.amazon.com/cdk/latest/guide/environments.html
-# )
+investigate_stack = InvestigateAlarmStack(
+    scope=app,
+    construct_id=gs
+    "InvestigateAlarmStack",
+    iam_role_arn=automation_role_stack.role.role_arn,
+)
+
+investigate_meta_stack = InvestigateAlarmMetaStack(
+    scope=app,
+    construct_id="InvestigateAlarmMetaStack",
+    iam_role_arn=automation_role_stack.role.role_arn,
+    canary_duration_alarm_arn=application_stack.arns.canary_duration_alarm_arn,
+)
+
+approval_gate_stack = ApprovalGateStack(
+    scope=app,
+    construct_id="ApprovalGateStack",
+    iam_role_arn=automation_role_stack.role.role_arn,
+    topic_arn=investigate_meta_stack.investigation_topic.topic_arn,
+)
+
+scale_stack = ScaleStack(
+    scope=app,
+    construct_id="ScaleStack",
+    iam_role_arn=automation_role_stack.role.role_arn,
+    topic_arn=investigate_meta_stack.investigation_topic.topic_arn,
+    ecs_service_name=application_stack.ecs_service_name,
+    ecs_cluster_name=application_stack.ecs_cluster_name,
+)
 
 app.synth()

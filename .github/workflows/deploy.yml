@@ -1,0 +1,92 @@
+name: lint
+# on event dispatch
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+  
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Install AWS CLI
+      uses: unfor19/install-aws-cli-action@v1
+      with:
+        version: 2                         # default
+        verbose: false                     # default
+        arch: arm64                        # allowed values: amd64, arm64
+    - name: Setup AWS credentials and config
+      run: |
+        mkdir -p $HOME/.aws
+        echo "[default]" > $HOME/.aws/credentials
+        echo "aws_access_key_id = test" >> $HOME/.aws/credentials
+        echo "aws_secret_access_key = test" >> $HOME/.aws/credentials
+        echo "[localstack]" >> $HOME/.aws/credentials
+        echo "aws_access_key_id = test" >> $HOME/.aws/credentials
+        echo "aws_secret_access_key = test" >> $HOME/.aws/credentials
+        echo "[default]" > $HOME/.aws/config
+        echo "region = us-east-1" >> $HOME/.aws/config
+        echo "output = json" >> $HOME/.aws/config
+        echo "[profile localstack]" >> $HOME/.aws/config
+        echo "region = us-east-1" >> $HOME/.aws/config
+        echo "output = json" >> $HOME/.aws/config
+        echo "endpoint_url = http://192.168.147.1:4566" >> $HOME/.aws/config
+        # check localstack health in localhost
+    - name: Check out repository code
+      uses: actions/checkout@v2
+    - name: Set up Node
+      uses: actions/setup-node@v3
+      with:
+        node-version: "21.1.0"
+    - name: Install AWS CDK
+      run: npm install -g aws-cdk
+    - name: Test AWS CDK
+      run: cdk --help
+    - name: Install uv
+      uses: astral-sh/setup-uv@v5
+    - name: "Set up Python"
+      uses: actions/setup-python@v5
+      with:
+        python-version-file: "pyproject.toml"
+    - name: Install the project
+      run: |
+        uv venv
+        source .venv/bin/activate
+        uv sync
+    - name: Run CDK synth
+      run: |
+        cdk synth
+    - name: Bootstrap cdk
+      run: cdk bootstrap
+    - name: Verify AWS credentials
+      run: |
+        aws sts get-caller-identity || echo "No credentials found"
+    - name: Set aws env vars
+      run: |
+        echo "AWS_ACCESS_KEY_ID=test" >> $GITHUB_ENV
+        echo "AWS_SECRET_ACCESS_KEY=test" >> $GITHUB_ENV
+        echo "AWS_REGION=us-east-1" >> $GITHUB_ENV
+        echo "AWS_ACCOUNT_ID=000000000000" >> $GITHUB_ENV
+        echo "AWS_ENDPOINT_URL=http://192.168.147.1:4566" >> $GITHUB_ENV
+    - name: Check AWS env vars
+      run: env | grep AWS
+    
+
+    # - name: Configure AWS credentials
+    #   uses: aws-actions/configure-aws-credentials@v4
+    #   with:
+    #     aws-access-key-id: test
+    #     aws-secret-access-key: test
+    #     aws-region: us-east-1
+    - name: Deploy CDK
+      env:
+        AWS_ACCESS_KEY_ID: test
+        AWS_SECRET_ACCESS_KEY: test
+        AWS_REGION: us-east-1
+        AWS_ACCOUNT_ID: 000000000000
+        AWS_ENDPOINT_URL: http://192.168.147.1:4566
+      run: |
+        export AWS_ACCESS_KEY_ID=test
+        export AWS_SECRET_ACCESS_KEY=test
+        cdk deploy --require-approval never --endpoint-url=http://192.168.147.1:4566

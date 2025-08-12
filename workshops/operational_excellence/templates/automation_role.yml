@@ -1,0 +1,56 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Resources:
+  AutomationRole:
+    # we create an IAM role that can be assumed by SSM and EC2 services
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service:
+            # assumed by SSM and EC2 services
+            - ssm.amazonaws.com
+            - ec2.amazonaws.com
+          Action: sts:AssumeRole
+      Policies:
+        # the role can pass roles to other AWS services
+        - PolicyName: PassRole
+          PolicyDocument:
+            Statement:
+              - Effect: Allow
+                Action: 'iam:PassRole'
+                # --- WARNING ----
+                # This is risky and should be scoped down to the specific role ARN
+                # but for the sake of this workshop, we will allow all roles
+                Resource: '*'
+        # the role can publish messages to SNS topics
+        # this is used to send notifications to the SNS topic when the automation document is executed
+        - PolicyName: SNSPublish
+          PolicyDocument:
+            Statement:
+              - Effect: Allow
+                Action: 'sns:Publish'
+                # --- WARNING ----
+                # This is risky and should be scoped down to the specific SNS topic ARN
+                # but for the sake of this workshop, we will allow all SNS topics
+                Resource: '*'
+      # what the actual policy can do
+      # this is a managed policy that allows the role to perform actions on other AWS services
+      # and resources. The policy is attached to the role, allowing it to perform the actions specified in the policy.
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AmazonSSMAutomationRole
+        - arn:aws:iam::aws:policy/CloudWatchReadOnlyAccess
+        - arn:aws:iam::aws:policy/CloudWatchLogsReadOnlyAccess
+        - arn:aws:iam::aws:policy/AmazonRDSReadOnlyAccess
+        - arn:aws:iam::aws:policy/AWSCloudFormationReadOnlyAccess
+        - arn:aws:iam::aws:policy/AmazonECS_FullAccess
+        - arn:aws:iam::aws:policy/CloudWatchSyntheticsReadOnlyAccess
+
+      # this is the path for the role, which is used to organize roles in AWS IAM
+      # for example we can have paths like /workshop/ or /workshops/operational_excellence/
+      # or /devops or /prod or /test or /staging or /qa or /sandbox or /demo
+      Path: "/"
+      # role name for the role, which is used to identify the role in AWS IAM
+      RoleName: AutomationRole

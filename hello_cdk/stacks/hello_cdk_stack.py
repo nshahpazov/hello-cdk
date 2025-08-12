@@ -1,4 +1,5 @@
 import aws_cdk.aws_s3 as s3
+
 from aws_cdk import Stack  # Duration,; aws_sqs as sqs,
 from aws_cdk import RemovalPolicy
 from aws_cdk import aws_lambda as _lambda
@@ -21,7 +22,8 @@ class HelloCdkStack(Stack):
         )
 
         my_function = _lambda.Function(
-            self, "HelloWorldFunction", 
+            self,
+            "HelloWorldFunction",
             runtime=_lambda.Runtime.NODEJS_20_X,  # Provide any supported Node.js runtime
             handler="index.handler",
             code=_lambda.Code.from_inline(
@@ -72,7 +74,8 @@ class HelloCdkStack(Stack):
 
         # create a second lambda which reads from the s3 bucket and prints the contents
         lambda_function2 = _lambda.Function(
-            self, "HelloWorldFunctionReader",
+            self,
+            "HelloWorldFunctionReader",
             runtime=_lambda.Runtime.NODEJS_20_X,  # Provide any supported Node.js runtime
             handler="index.handler",
             code=_lambda.Code.from_inline(
@@ -136,4 +139,3 @@ class HelloCdkStack(Stack):
         # print the url to the console when cdksynth
         print("Function URL: ", my_function2_url.url)
         # output the function url to the console
-

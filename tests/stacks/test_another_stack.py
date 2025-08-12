@@ -1,4 +1,5 @@
 import pytest
+
 from aws_cdk import Stack, assertions
 from aws_cdk import aws_lambda as _lambda
 
@@ -22,7 +23,9 @@ class TestAnotherStack:
         template = assertions.Template.from_stack(stack)
         template.resource_count_is("AWS::DynamoDB::Table", 1)
 
-    def test_lambda_has_env_vars(self,):
+    def test_lambda_has_env_vars(
+        self,
+    ):
         stack = Stack()
         HitCounter(
             scope=stack,
@@ -31,18 +34,21 @@ class TestAnotherStack:
                 scope=stack,
                 id="TestFunction",
                 runtime=_lambda.Runtime.PYTHON_3_10,
-                handler='hitcount.handler',
-                code=_lambda.Code.from_asset('lambda')
+                handler="hitcount.handler",
+                code=_lambda.Code.from_asset("lambda"),
             ),
         )
 
         template = assertions.Template.from_stack(stack)
         env_capture = assertions.Capture()
 
-        template.has_resource_properties("AWS::Lambda::Function", {
-            "Handler": "hit_count.handler",
-            "Environment": env_capture,
-        })
+        template.has_resource_properties(
+            "AWS::Lambda::Function",
+            {
+                "Handler": "hit_count.handler",
+                "Environment": env_capture,
+            },
+        )
 
         assert env_capture.as_object() == {
             "Variables": {
@@ -50,7 +56,6 @@ class TestAnotherStack:
                 "HITS_TABLE_NAME": {"Ref": "HitCounterHitCounterTable83B91BB0"},
             },
         }
-
 
     def test_dynamodb_with_encryption(self):
         stack = Stack()
@@ -61,8 +66,8 @@ class TestAnotherStack:
                 scope=stack,
                 id="TestFunction",
                 runtime=_lambda.Runtime.PYTHON_3_10,
-                handler='hello.handler',
-                code=_lambda.Code.from_asset('lambda')
+                handler="hello.handler",
+                code=_lambda.Code.from_asset("lambda"),
             ),
         )
 
@@ -70,7 +75,7 @@ class TestAnotherStack:
         template.has_resource_properties(
             type="AWS::DynamoDB::Table",
             props={
-                "SSESpecification": { "SSEEnabled": True },
+                "SSESpecification": {"SSEEnabled": True},
             },
         )
 

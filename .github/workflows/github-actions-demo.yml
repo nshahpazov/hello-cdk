@@ -10,6 +10,11 @@ jobs:
     env:
         TOMORROW: Tuesday
     steps:
+      - name: Check out repository code
+        uses: actions/checkout@v2
+      - name: Run Bash script with debugging
+        run: |
+          bash example.sh
       - name: Say Hello
         # you need to use ${{}} syntax to access the variables instead of $NAME
         run: echo "👋 Hello, ${{vars.NAME}}"

@@ -26,7 +26,6 @@ class HelloAgainStack(Stack):
             # here we set the environment variables for the lambda function
             # we can access them in the code using os.environ['HITS_TABLE_NAME']
             # and os.environ['DOWNSTREAM_FUNCTION_NAME'] and we do that in the hit_count.py file
-
             environment={
                 # those are late bound variables that are set at runtime
                 # and not at compile time. At compile time we'll get a

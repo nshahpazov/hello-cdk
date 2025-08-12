@@ -1,8 +1,8 @@
-from aws_cdk import aws_sqs as sqs
-from aws_cdk import aws_sns as sns
-from constructs import Construct
 from aws_cdk import Duration
+from aws_cdk import aws_sns as sns
 from aws_cdk import aws_sns_subscriptions as sns_subs
+from aws_cdk import aws_sqs as sqs
+from constructs import Construct
 
 
 class SnsSqsConstruct(Construct):

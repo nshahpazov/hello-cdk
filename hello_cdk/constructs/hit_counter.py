@@ -9,19 +9,17 @@ class HitCounter(Construct):
     def handler(self) -> _lambda.IFunction | _lambda.Function:
         return self._handler
 
-
     def __init__(
-            self,
-            scope: Construct,
-            id: str,
-            downstream: _lambda.IFunction | _lambda.Function,
-            read_capacity: int = 5,
-            **kwargs,
-        ) -> None:
+        self,
+        scope: Construct,
+        id: str,
+        downstream: _lambda.IFunction | _lambda.Function,
+        read_capacity: int = 5,
+        **kwargs,
+    ) -> None:
 
         if not (5 <= read_capacity <= 20):
             raise ValueError("Read capacity must be between 5 and 20")
-
 
         super().__init__(scope, id, **kwargs)
 
@@ -33,10 +31,8 @@ class HitCounter(Construct):
                 name="path",
                 type=ddb.AttributeType.STRING,
             ),
-
             encryption=ddb.TableEncryption.AWS_MANAGED,
             read_capacity=read_capacity,
-
         )
 
         self._handler = _lambda.Function(
@@ -48,7 +44,6 @@ class HitCounter(Construct):
             # here we set the environment variables for the lambda function
             # we can access them in the code using os.environ['HITS_TABLE_NAME']
             # and os.environ['DOWNSTREAM_FUNCTION_NAME'] and we do that in the hit_count.py file
-
             environment={
                 # those are late bound variables that are set at runtime
                 # and not at compile time. At compile time we'll get a
